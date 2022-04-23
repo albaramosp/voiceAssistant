@@ -3,6 +3,7 @@ from config import AEMET_KEY
 import geocoder
 import pandas as pd
 from os import getcwd
+import json
 
 def get_forecast():
     """
@@ -25,8 +26,4 @@ def get_forecast():
         response = requests.get(url)
 
         if response.status_code == 200:
-            return response.json()
-        
-
-
-print(get_forecast())
+            return response.json()[0]['prediccion']['dia']

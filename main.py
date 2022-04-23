@@ -41,10 +41,10 @@ while True:
                 assistant.askTime()
             elif "date" in words:
                 assistant.askDate()
-            elif "connect to corporate vpn" in words:
-                assistant.connect_to_vpn("corporate")
-            elif "disconnect from vpn" in words:
-                assistant.disconnectFromVPN("ignis")
+            elif "weather" in words and "today" in words:
+                assistant.askWeather("today")
+            elif "weather" in words and "tomorrow" in words:
+                assistant.askWeather("tomorrow")
             elif "turn off" in words or "bye" in words:
                 print("Bye!")
                 quit()

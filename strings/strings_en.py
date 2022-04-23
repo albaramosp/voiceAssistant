@@ -20,6 +20,22 @@ def CURRENT_TIME(hour, minute, pm):
     return "It's " + hour + " " + minute + " " + pm
 
 
+# Weather sky status
+SKY_STATUS = {
+    "11": "clear",
+    "11n": "clear",
+    "12": "partly cloudy",
+    "12n": "partly cloudy",
+    "13": "cloud intervals",
+    "13n": "cloud intervals",
+    "14": "cloudy",
+    "14n": "cloudy",
+    "15": "very cloudy",
+    "16": "covered",
+    "17": "high clouds",
+    "17n": "high clouds",
+    }
+
 # VPN
 def CONNECTING_TO_VPN(vpn):
     return "Connecting to " + vpn + " VPN"

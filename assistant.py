@@ -3,6 +3,7 @@ import pyttsx3
 import datetime
 from strings.strings_en import *
 from config import *
+from utils import *
 
 
 class Assistant:
@@ -62,7 +63,7 @@ class Assistant:
         """
         Asks current time to assistant.
         """
-        import datetime
+        
         today = datetime.datetime.now()
         self.speak(CURRENT_TIME(today.strftime("%-I"), today.strftime("%-M"), today.strftime("%p")))
 
@@ -83,6 +84,38 @@ class Assistant:
             self.speak(GREETING_NIGHT)
     
     
-    def askWeather(self):
-        pass
+    def askWeather(self, day):
+        forecast = get_forecast()
+        now = datetime.datetime.now().hour
+
+        if day == "today":
+            forecast = forecast[0]
+            
+            if now >= 6 and now <= 12:
+                cielo = forecast['estadoCielo'][3]['value']
+            elif now > 12 and now <= 18:
+                cielo = forecast['estadoCielo'][4]['value']
+            elif now > 18 and now <= 21:
+                cielo = forecast['estadoCielo'][5]['value']
+            else:
+                cielo = forecast['estadoCielo'][6]['value']
+        else:
+            forecast = forecast[1]
+            cielo = forecast['estadoCielo'][0]['value']
+        
+        tmp_max = forecast['temperatura']['maxima']
+        tmp_min = forecast['temperatura']['minima']
+
+        try:
+            cielo = SKY_STATUS[cielo]
+        except:
+            cielo = "unknown"
+
+        self.speak(day + " we will have a temperature between " + \
+            str(tmp_min) + " and " + str(tmp_max) + " degrees Celsius with " + \
+                cielo + " skies")
+        
+
+        
+        
     
