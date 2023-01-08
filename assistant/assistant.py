@@ -2,7 +2,8 @@ import pyttsx3
 import datetime
 from assistant.strings_en import *
 from os import system
-from forecast_manager.forecast_manager import ForecastManager
+from forecast_manager.aemet_forecast_manager import AemetForecastManager
+from geolocation_manager.ine_geolocation_manager import INEGeolocationManager
 from translation_manager.translator_manager import TranslatorManager
 from . import settings
 from user.user import User
@@ -97,8 +98,18 @@ class Assistant:
         self._speak(UNKNOWN_COMMAND)
 
 
-    def _tell_weather(self, is_today: bool):
-        tmp_max, tmp_min, sky = ForecastManager().get_forecast(is_today)
+    def tell_weather(self, is_today: bool):
+        target_date = datetime.datetime.now() if is_today else (
+            datetime.datetime.now() + datetime.timedelta(days=1))
+        loc = INEGeolocationManager().get_geolocation()
+        cprov = loc.get('province_code')
+        cmun = loc.get('city_code')
+        forecast = AemetForecastManager(province_code=cprov,
+                                        city_code=cmun).get_forecast(target_date)
+
+        tmp_max = forecast.get('tmp_max')
+        tmp_min = forecast.get('tmp_min')
+        sky = forecast.get('sky_status')
         
         if tmp_max is not None and tmp_min is not None and sky is not None:
             sky = TranslatorManager().translate(sky, settings.LANGUAGE)
