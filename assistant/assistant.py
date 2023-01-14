@@ -5,7 +5,7 @@ from os import system
 from forecast_manager.aemet_forecast_manager import AemetForecastManager
 from geolocation_manager.ine_geolocation_manager import INEGeolocationManager
 from translation_manager.translator_manager import TranslatorManager
-from . import settings
+from assistant import settings
 from user.user import User
 
 
@@ -35,7 +35,6 @@ class Assistant:
         self._engine.setProperty('rate', self._rate)
         self._engine.setProperty('voice', 'english+f2')
 
-
     def _speak(self, txt: str):
         """
         Sets a text for the engine to say.
@@ -45,11 +44,9 @@ class Assistant:
 
         self._engine.say(txt)
         self._engine.runAndWait()
-    
 
     def _beep(self):
         system('play -nq -t alsa synth {} sine {}'.format(self._duration, self._frequency))
-
 
     def _greet(self):
         """
@@ -65,7 +62,6 @@ class Assistant:
             self._speak(GREETING_EVENING)
         else:
             self._speak(GREETING_NIGHT)
-    
 
     def _is_waking_up_command(self, txt: str) -> bool:
         """
@@ -78,7 +74,6 @@ class Assistant:
 
         return any(map(txt.__contains__, self._wake_commands))
 
-
     def _tell_date(self):
         today = datetime.datetime.now()
 
@@ -87,18 +82,15 @@ class Assistant:
                                 today.strftime("%B"),
                                 today.strftime("%Y")))
 
-
     def _tell_time(self):       
         today = datetime.datetime.now()
         self._speak(CURRENT_TIME(today.strftime("%-I"),
                    today.strftime("%-M"), today.strftime("%p")))
 
-
     def _tell_error(self):
         self._speak(UNKNOWN_COMMAND)
 
-
-    def tell_weather(self, is_today: bool):
+    def _tell_weather(self, is_today: bool):
         target_date = datetime.datetime.now() if is_today else (
             datetime.datetime.now() + datetime.timedelta(days=1))
         loc = INEGeolocationManager().get_geolocation()
@@ -117,7 +109,6 @@ class Assistant:
                         tmp_max=str(tmp_max), tmp_min=str(tmp_min), sky_status=sky))
         else:
             self._speak(UNKNOWN)
-
 
     def main_loop(self):
         # Waits for user input

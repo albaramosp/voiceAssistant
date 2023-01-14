@@ -1,0 +1,4 @@
+import unittest
+from unittest import mock
+from forecast_manager.aemet_forecast_manager import AemetForecastManager, ForecastManagerException
+
